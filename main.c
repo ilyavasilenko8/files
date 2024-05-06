@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include "Files/files.h"
 
 int main() {
-    printf("Hello, World!\n");
+    test_files();
     return 0;
 }

@@ -6,3 +6,5 @@ set(CMAKE_C_STANDARD 11)
 add_executable(laboratory_files main.c
         Files/files.c
         Files/files.h)
+
+

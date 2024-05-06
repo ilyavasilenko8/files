@@ -1,0 +1,6 @@
+# ninja log v5
+0	104	7367010132294716	build.ninja	c085e1e48ec49db9
+0	70	7366993989104750	CMakeFiles/laboratory_files.dir/main.c.obj	11ed14882ed18593
+0	89	7367010132294716	build.ninja	c085e1e48ec49db9
+2	54	7367011268970460	CMakeFiles/laboratory_files.dir/main.c.obj	11ed14882ed18593
+5	69	7367011269110587	CMakeFiles/laboratory_files.dir/Files/files.c.obj	5ce45c242fee7735

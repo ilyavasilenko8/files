@@ -257,8 +257,70 @@ void test_calculate_expression() {
     assert(assert_file("test.txt", true_data_8));
 }
 
+void save_only_words_with_sequence(char *file_name, char *sequence) {
+    FILE *file;
+    file = fopen(file_name, "r");
+    size_t sequence_size = strlen_(sequence);
+
+    char strings[MAX_STRINGS_NUMBER][MAX_STRING_LENGTH];
+    size_t size = 0;
+
+    while (!feof(file)) {
+        fgets(strings[size], MAX_STRING_LENGTH, file);
+        size++;
+    }
+
+    fclose(file);
+
+    file = fopen(file_name, "w");
+    bool is_first_saved_word = true;
+
+    for (size_t i = 0; i < size; i++) {
+        size_t word_size = strlen_(strings[i]);
+
+        for (size_t j = 0; j < word_size - sequence_size; j++) {
+            char *word = strings[i] + j;
+
+            if (*sequence == *word) {
+                int coincidences = 0;
+
+                for (char *s1 = sequence, *s2 = word; *s1 != '\0'; s1++, s2++) {
+                    if (*s1 == *s2) {
+                        coincidences++;
+                    }
+                }
+
+                if (coincidences == sequence_size) {
+                    char string[MAX_STRING_LENGTH];
+                    copy(strings[i], strings[i] + strlen_(strings[i]) - 1, string);
+
+                    if (is_first_saved_word) {
+                        fprintf(file, "%s", string);
+                        is_first_saved_word = false;
+                    } else {
+                        fprintf(file, "\n%s", string);
+                    }
+                }
+            }
+        }
+    }
+
+    fclose(file);
+}
+
+void test_save_only_words_with_sequence() {
+    FILE *test;
+    test = fopen("test.txt", "w");
+    fprintf(test, "zero\nerror\nhero\nhouse");
+    fclose(test);
+    save_only_words_with_sequence("test.txt", "ero");
+    char *true_data[] = {"zero\n", "hero"};
+    assert(assert_file("test.txt", true_data));
+}
+
 void test_files() {
     test_make_matrix_storage_by_columns();
     test_represent_as_floating_point_numbers();
     test_calculate_expression();
+    test_save_only_words_with_sequence();
 }

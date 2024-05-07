@@ -13,6 +13,10 @@ void make_matrix_storage_by_columns(char *file_name);
 
 void test_make_matrix_storage_by_columns();
 
+void save_only_longest_word_in_string(char *file_name);
+
+void test_save_only_longest_word_in_string();
+
 void test_files();
 
 #endif //LABORATORY_FILES_FILES_H

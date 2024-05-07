@@ -17,6 +17,10 @@ void save_only_longest_word_in_string(char *file_name);
 
 void test_save_only_longest_word_in_string();
 
+void represent_as_floating_point_numbers(char *file_name);
+
+void test_represent_as_floating_point_numbers();
+
 void test_files();
 
 #endif //LABORATORY_FILES_FILES_H

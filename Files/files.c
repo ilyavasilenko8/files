@@ -130,8 +130,135 @@ void test_represent_as_floating_point_numbers() {
     assert(assert_file("test.txt", true_data));
 }
 
+void calculate_expression(char *file_name) {
+    FILE *file;
+    file = fopen(file_name, "r");
+    char expression[MAX_STRING_LENGTH];
+    fgets(expression, MAX_STRING_LENGTH, file);
+    fclose(file);
+    double expression_result;
+    BagOfWords elements;
+    getBagOfWords(&elements, expression);
+
+    if (elements.size == 3) {
+        double a = atof(elements.words[0].begin);
+        double b = atof(elements.words[2].begin);
+
+        if (*elements.words[1].begin == '+') {
+            expression_result = a + b;
+        } else if (*elements.words[1].begin == '-') {
+            expression_result = a - b;
+        } else if (*elements.words[1].begin == '*') {
+            expression_result = a * b;
+        } else {
+            expression_result = a / b;
+        }
+    } else {
+        double a = atof(elements.words[0].begin);
+        double b = atof(elements.words[2].begin);
+        double c = atof(elements.words[4].begin);
+
+        if ((*elements.words[1].begin == '+' || *elements.words[1].begin == '-') && (*elements.words[3].begin == '*' || *elements.words[3].begin == '/')) {
+            if (*elements.words[3].begin == '*') {
+                expression_result = b * c;
+            } else {
+                expression_result = b / c;
+            }
+
+            if (*elements.words[1].begin == '+') {
+                expression_result += a;
+            } else {
+                expression_result = a - expression_result;
+            }
+        } else {
+            if (*elements.words[1].begin == '+') {
+                expression_result = a + b;
+            } else if (*elements.words[1].begin == '-') {
+                expression_result = a - b;
+            } else if (*elements.words[1].begin == '*') {
+                expression_result = a * b;
+            } else {
+                expression_result = a / b;
+            }
+
+            if (*elements.words[3].begin == '+') {
+                expression_result += c;
+            } else if (*elements.words[3].begin == '-') {
+                expression_result -= c;
+            } else if (*elements.words[3].begin == '*') {
+                expression_result *= c;
+            } else {
+                expression_result /= c;
+            }
+        }
+    }
+
+    file = fopen(file_name, "a");
+    fprintf(file, " = %.3lf", expression_result);
+    fclose(file);
+}
+
+void test_calculate_expression() {
+    FILE *test;
+    test = fopen("test.txt", "w");
+    fprintf(test, "3 + 2");
+    fclose(test);
+    calculate_expression("test.txt");
+    char *true_data[1] = {"3 + 2 = 5.000"};
+    assert(assert_file("test.txt", true_data));
+
+    test = fopen("test.txt", "w");
+    fprintf(test, "3 - 6");
+    fclose(test);
+    calculate_expression("test.txt");
+    char *true_data_2[1] = {"3 - 6 = -3.000"};
+    assert(assert_file("test.txt", true_data_2));
+
+    test = fopen("test.txt", "w");
+    fprintf(test, "2 * 2");
+    fclose(test);
+    calculate_expression("test.txt");
+    char *true_data_3[1] = {"2 * 2 = 4.000"};
+    assert(assert_file("test.txt", true_data_3));
+
+    test = fopen("test.txt", "w");
+    fprintf(test, "5 / 2");
+    fclose(test);
+    calculate_expression("test.txt");
+    char *true_data_4[1] = {"5 / 2 = 2.500"};
+    assert(assert_file("test.txt", true_data_4));
+
+    test = fopen("test.txt", "w");
+    fprintf(test, "2 + 5 - 3");
+    fclose(test);
+    calculate_expression("test.txt");
+    char *true_data_5[1] = {"2 + 5 - 3 = 4.000"};
+    assert(assert_file("test.txt", true_data_5));
+
+    test = fopen("test.txt", "w");
+    fprintf(test, "2 * 2 - 1");
+    fclose(test);
+    calculate_expression("test.txt");
+    char *true_data_6[1] = {"2 * 2 - 1 = 3.000"};
+    assert(assert_file("test.txt", true_data_6));
+
+    test = fopen("test.txt", "w");
+    fprintf(test, "2 * 2 * 2");
+    fclose(test);
+    calculate_expression("test.txt");
+    char *true_data_7[1] = {"2 * 2 * 2 = 8.000"};
+    assert(assert_file("test.txt", true_data_7));
+
+    test = fopen("test.txt", "w");
+    fprintf(test, "2 + 2 * 2");
+    fclose(test);
+    calculate_expression("test.txt");
+    char *true_data_8[1] = {"2 + 2 * 2 = 6.000"};
+    assert(assert_file("test.txt", true_data_8));
+}
+
 void test_files() {
     test_make_matrix_storage_by_columns();
     test_represent_as_floating_point_numbers();
-
+    test_calculate_expression();
 }

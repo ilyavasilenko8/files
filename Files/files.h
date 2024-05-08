@@ -13,9 +13,10 @@ typedef struct polynomial {
     int coefficient;
 } polynomial;
 
-typedef struct a {
-    int n;
-} a;
+typedef struct sportsman {
+    char *FIO;
+    int best_result;
+} sportsman;
 
 bool assert_file(char *file_name, char **true_data);
 
@@ -52,6 +53,12 @@ void test_sort_negative_after_positive();
 void transpose_non_symmetric_matrices(char *file_name, size_t size);
 
 void test_transpose_non_symmetric_matrices();
+
+void sort_sportsmen(sportsman sportsmen[], size_t size);
+
+void make_team(char *file_name, size_t size, size_t players_need);
+
+void test_make_team();
 
 void test_files();
 

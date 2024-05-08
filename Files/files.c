@@ -513,6 +513,54 @@ void test_transpose_non_symmetric_matrices() {
     }
 }
 
+void sort_sportsmen(sportsman sportsmen[], size_t size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < i; j++) {
+            if (sportsmen[i].best_result > sportsmen[j].best_result) {
+                sportsman temp = sportsmen[i];
+                sportsmen[i] = sportsmen[j];
+                sportsmen[j] = temp;
+            }
+        }
+    }
+}
+
+void make_team(char *file_name, size_t size, size_t players_need) {
+    if (size > players_need) {
+        FILE *file;
+        sportsman sportsmen[size];
+        file = fopen(file_name, "rb");
+        fread(sportsmen, sizeof(sportsman), size, file);
+        fclose(file);
+        sort_sportsmen(sportsmen, size);
+        sportsman team[players_need];
+        for (size_t i = 0; i < players_need; i++) {
+            team[i] = sportsmen[i];
+        }
+
+        file = fopen(file_name, "wb");
+        fwrite(team, sizeof(sportsman), players_need, file);
+        fclose(file);
+    }
+}
+
+void test_make_team() {
+    sportsman sportsmen[] = {{"sportsman 1", 13}, {"sportsman 2", 15}, {"sportsman 3", 12}, {"sportsman 4", 17}, {"sportsman 5", 16}};
+    FILE *test;
+    test = fopen("test.bin", "wb");
+    fwrite(sportsmen, sizeof(sportsman), 5, test);
+    fclose(test);
+    make_team("test.bin", 5, 3);
+    sportsman team[3];
+    test = fopen("test.bin", "rb");
+    fread(team, sizeof(sportsman), 3, test);
+    fclose(test);
+    sportsman true_data[] = {{"sportsman 4", 17}, {"sportsman 5", 16}, {"sportsman 2", 15}};
+    for (size_t i = 0; i < 3; i++) {
+        assert(true_data[i].FIO == team[i].FIO && true_data[i].best_result == team[i].best_result);
+    }
+}
+
 void test_files() {
     test_make_matrix_storage_by_columns();
     test_represent_as_floating_point_numbers();
@@ -522,4 +570,5 @@ void test_files() {
     test_remove_polynomials_if_x_sqrt_root();
     test_sort_negative_after_positive();
     test_transpose_non_symmetric_matrices();
+    test_make_team();
 }

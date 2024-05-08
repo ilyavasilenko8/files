@@ -49,6 +49,10 @@ void sort_negative_after_positive(char *file_name, size_t size);
 
 void test_sort_negative_after_positive();
 
+void transpose_non_symmetric_matrices(char *file_name, size_t size);
+
+void test_transpose_non_symmetric_matrices();
+
 void test_files();
 
 #endif //LABORATORY_FILES_FILES_H

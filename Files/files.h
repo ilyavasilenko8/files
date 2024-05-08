@@ -3,6 +3,7 @@
 
 #define MAX_STRINGS_NUMBER 100
 #define MAX_STRING_LENGTH 100
+#define MAX_ELEMENTS_NUMBER 100
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,6 +12,10 @@ typedef struct polynomial {
     int power;
     int coefficient;
 } polynomial;
+
+typedef struct a {
+    int n;
+} a;
 
 bool assert_file(char *file_name, char **true_data);
 
@@ -39,6 +44,10 @@ int pow_(int a, int b);
 void remove_polynomials_if_x_sqrt_root(char *file_name, int *size, int x);
 
 void test_remove_polynomials_if_x_sqrt_root();
+
+void sort_negative_after_positive(char *file_name, size_t size);
+
+void test_sort_negative_after_positive();
 
 void test_files();
 

@@ -424,6 +424,55 @@ void test_remove_polynomials_if_x_sqrt_root() {
     }
 }
 
+void sort_negative_after_positive(char *file_name, size_t size) {
+    FILE *file;
+    file = fopen(file_name, "rb");
+    int elements[size];
+    fread(elements, sizeof(int), size, file);
+    fclose(file);
+
+    int positive_elements[size];
+    int negative_elements[size];
+    size_t positive_elements_size = 0;
+    size_t negative_elements_size = 0;
+
+    for (size_t i = 0; i < size; i++) {
+        if (elements[i] < 0) {
+            negative_elements[negative_elements_size++] = elements[i];
+        } else {
+            positive_elements[positive_elements_size++] = elements[i];
+        }
+    }
+
+    for (size_t i = 0; i < positive_elements_size; i++) {
+        elements[i] = positive_elements[i];
+    }
+
+    for (size_t i = 0; i < negative_elements_size; i++) {
+        elements[positive_elements_size + i] = negative_elements[i];
+    }
+
+    file = fopen(file_name, "wb");
+    fwrite(elements, sizeof(int), size, file);
+    fclose(file);
+}
+
+void test_sort_negative_after_positive() {
+    int elements[10] = {1, 4, -4, -3, -64, 43, -5, 2, 3, -5};
+    FILE *test;
+    test = fopen("test.bin", "wb");
+    fwrite(elements, sizeof(int), 10, test);
+    fclose(test);
+    sort_negative_after_positive("test.bin", 10);
+    test = fopen("test.bin", "rb");
+    fread(elements, sizeof(int), 10, test);
+    fclose(test);
+    int true_data[10] = {1, 4, 43, 2, 3, -4, -3, -64, -5, -5};
+
+    for (size_t i = 0; i < 10; i++) {
+        assert(true_data[i] == elements[i]);
+    }
+}
 
 void test_files() {
     test_make_matrix_storage_by_columns();
@@ -432,4 +481,5 @@ void test_files() {
     test_save_only_words_with_sequence();
     test_save_only_longest_word_in_string();
     test_remove_polynomials_if_x_sqrt_root();
+    test_sort_negative_after_positive();
 }

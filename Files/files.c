@@ -561,6 +561,71 @@ void test_make_team() {
     }
 }
 
+void update_products_information(char *products_file_name, size_t *products_size, char *orders_file_name, size_t orders_size) {
+    FILE *file;
+    product products[*products_size];
+    order orders[orders_size];
+    size_t products_left_size = 0;
+    product products_left[*products_size];
+
+    file = fopen(products_file_name, "rb");
+    fread(products, sizeof(product), *products_size, file);
+    fclose(file);
+    file = fopen(orders_file_name, "rb");
+    fread(orders, sizeof(order), orders_size, file);
+    fclose(file);
+
+    for (size_t j = 0; j < *products_size; j++) {
+        for (size_t i = 0; i < orders_size; i++) {
+            if (products[j].name == orders[i].name) {
+                if (products[j].quantity > orders[i].quantity) {
+                    products_left[products_left_size].name = orders[i].name;
+                    products_left[products_left_size].unit_price = products[j].unit_price;
+                    products_left[products_left_size].quantity = products[j].quantity - orders[i].quantity;
+                    products_left[products_left_size].total_price = products_left[products_left_size].unit_price * products_left[products_left_size].quantity;
+                    products_left_size++;
+                }
+            }
+        }
+    }
+
+    *products_size = products_left_size;
+
+    file = fopen(products_file_name, "wb");
+    fwrite(products_left, sizeof(product), products_left_size, file);
+    fclose(file);
+}
+
+void test_update_products_information() {
+    product products[] = {{"long sword", 15, 7, 105},
+                          {"battle axe", 10, 5, 50},
+                          {"long spear", 10, 8, 80},
+                          {"long bow", 50, 4, 200}};
+    size_t products_size = 4;
+    order orders[] = {{"long sword", 4},
+                      {"battle axe", 5},
+                      {"long spear", 3},
+                      {"long bow", 5}};
+    FILE *test;
+    test = fopen("test.bin", "wb");
+    fwrite(products, sizeof(product), 4, test);
+    fclose(test);
+    test = fopen("test2.bin", "wb");
+    fwrite(orders, sizeof(order), 4, test);
+    fclose(test);
+    update_products_information("test.bin", &products_size, "test2.bin", 4);
+    test = fopen("test.bin", "rb");
+    product products_left[products_size];
+    product true_data[] = {{"long sword", 15, 3, 45},
+                           {"long spear", 10, 5, 50}};
+    fread(products_left, sizeof(product), products_size, test);
+    fclose(test);
+    assert(products_size == 2);
+    for (size_t i = 0; i < products_size; i++) {
+        assert(products_left[i].name == true_data[i].name && products_left[i].quantity == true_data[i].quantity && products_left[i].total_price == true_data[i].total_price);
+    }
+}
+
 void test_files() {
     test_make_matrix_storage_by_columns();
     test_represent_as_floating_point_numbers();
@@ -571,4 +636,5 @@ void test_files() {
     test_sort_negative_after_positive();
     test_transpose_non_symmetric_matrices();
     test_make_team();
+    test_update_products_information();
 }

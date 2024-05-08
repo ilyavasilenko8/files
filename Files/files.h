@@ -18,6 +18,18 @@ typedef struct sportsman {
     int best_result;
 } sportsman;
 
+typedef struct product {
+    char *name;
+    int unit_price;
+    int quantity;
+    int total_price;
+} product;
+
+typedef struct order {
+    char *name;
+    int quantity;
+} order;
+
 bool assert_file(char *file_name, char **true_data);
 
 void make_matrix_storage_by_columns(char *file_name);
@@ -59,6 +71,10 @@ void sort_sportsmen(sportsman sportsmen[], size_t size);
 void make_team(char *file_name, size_t size, size_t players_need);
 
 void test_make_team();
+
+void update_products_information(char *products_file_name, size_t *products_size, char *orders_file_name, size_t orders_size);
+
+void test_update_products_information();
 
 void test_files();
 
